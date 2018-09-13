@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <style>
+        .ct {
+            margin: 0 auto;
+            width: 600px;
+            height: 1000px;
+            border: 1px solid red;
+            padding: 5px;
+            position: relative;
+        }
+        .ct img {
+            position: absolute;
+        }
+        .clearfix::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+    <div class="ct clearfix">
+        <img src="http://via.placeholder.com/100x120" alt="300*40">
+        <img src="http://via.placeholder.com/60x100" alt="300*100">
+        <img src="http://via.placeholder.com/120x100" alt="300*100">
+        <img src="http://via.placeholder.com/150x100" alt="300*100">
+        <img src="http://via.placeholder.com/170x100" alt="300*100">
+        <img src="http://via.placeholder.com/50x100" alt="300*100">
+        <img src="http://via.placeholder.com/90x100" alt="300*100">
+        <img src="http://via.placeholder.com/190x100" alt="300*100">
+        <img src="http://via.placeholder.com/110x100" alt="300*100">
+        <img src="http://via.placeholder.com/100x100" alt="300*100">
+        <img src="http://via.placeholder.com/90x100" alt="300*100">
+        <img src="http://via.placeholder.com/20x100" alt="300*100">
+        <img src="http://via.placeholder.com/100x100" alt="300*100">
+        <img src="http://via.placeholder.com/60x100" alt="300*100">
+        <img src="http://via.placeholder.com/150x100" alt="300*100">
+        <img src="http://via.placeholder.com/130x100" alt="300*100">
+        <img src="http://via.placeholder.com/120x100" alt="300*100">
+        <img src="http://via.placeholder.com/110x100" alt="300*100">
+        <img src="http://via.placeholder.com/160x100" alt="300*100">
+        <img src="http://via.placeholder.com/80x100" alt="300*100">
+        <img src="http://via.placeholder.com/200x100" alt="300*100">
+        <img src="http://via.placeholder.com/150x100" alt="300*100">
+        <img src="http://via.placeholder.com/100x100" alt="300*100">
+     </div>
+    <script>
+    // // 实现原理：
+
+    // // 初始化
+    // var img = $('.ct img')
+    // var colwidhtArray = []
+    // //获取 图片的全部宽度
+    // var imgWidth = $('.ct img').outerWidth(true)
+    // console.log(imgWidth)
+    // console.log($('.ct img').lenght)
+    // // 初始化为0
+    // for(var i =0; i<img.length;i++) {
+    //     colwidhtArray[i] = 0
+    // }
+    // console.log(colwidhtArray)
+    // $('.ct img').on('load',function() {
+    //     var minValue = colHeightArray[0]
+    //     var minIndex = 0
+    //     for(var i=0;i<img.length;i++) {
+    //             if(colwidhtArray[i]<minValue) {
+    //                 minValue = colwidhtArray[i]
+    //                 minIndex = i
+    //             }
+    //         }
+    //     $(this).css({
+    //         left: minIndex * imgWidth,
+    //         top: minValue
+    //     })
+    //     colwidhtArray[minIndex]+=$(this).outerWidth(true) 
+    // })
+    </script>
+</body>
+</html>
