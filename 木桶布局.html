@@ -1,86 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <style>
-        .ct {
-            margin: 0 auto;
-            width: 600px;
-            height: 1000px;
-            border: 1px solid red;
-            padding: 5px;
-            position: relative;
-        }
-        .ct img {
-            position: absolute;
-        }
-        .clearfix::after {
-            content: '';
-            display: block;
-            clear: both;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>木桶布局</title>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+    }
+    body{
+    }
+    .barrels{
+      width: 1000px;
+      margin: 20px auto 0 auto;
+    }
+    .img-row:after{
+      content:"";
+      display:block;
+      clear:both;
+    }
+    .img-ct{
+      float:left;
+    }
+    .load{
+      visibility: hidden;
+      height: 20px;
+    }
+  </style>
 </head>
 <body>
-    <div class="ct clearfix">
-        <img src="http://via.placeholder.com/100x120" alt="300*40">
-        <img src="http://via.placeholder.com/60x100" alt="300*100">
-        <img src="http://via.placeholder.com/120x100" alt="300*100">
-        <img src="http://via.placeholder.com/150x100" alt="300*100">
-        <img src="http://via.placeholder.com/170x100" alt="300*100">
-        <img src="http://via.placeholder.com/50x100" alt="300*100">
-        <img src="http://via.placeholder.com/90x100" alt="300*100">
-        <img src="http://via.placeholder.com/190x100" alt="300*100">
-        <img src="http://via.placeholder.com/110x100" alt="300*100">
-        <img src="http://via.placeholder.com/100x100" alt="300*100">
-        <img src="http://via.placeholder.com/90x100" alt="300*100">
-        <img src="http://via.placeholder.com/20x100" alt="300*100">
-        <img src="http://via.placeholder.com/100x100" alt="300*100">
-        <img src="http://via.placeholder.com/60x100" alt="300*100">
-        <img src="http://via.placeholder.com/150x100" alt="300*100">
-        <img src="http://via.placeholder.com/130x100" alt="300*100">
-        <img src="http://via.placeholder.com/120x100" alt="300*100">
-        <img src="http://via.placeholder.com/110x100" alt="300*100">
-        <img src="http://via.placeholder.com/160x100" alt="300*100">
-        <img src="http://via.placeholder.com/80x100" alt="300*100">
-        <img src="http://via.placeholder.com/200x100" alt="300*100">
-        <img src="http://via.placeholder.com/150x100" alt="300*100">
-        <img src="http://via.placeholder.com/100x100" alt="300*100">
-     </div>
-    <script>
-    // // 实现原理：
+  <div class="barrels">
 
-    // // 初始化
-    // var img = $('.ct img')
-    // var colwidhtArray = []
-    // //获取 图片的全部宽度
-    // var imgWidth = $('.ct img').outerWidth(true)
-    // console.log(imgWidth)
-    // console.log($('.ct img').lenght)
-    // // 初始化为0
-    // for(var i =0; i<img.length;i++) {
-    //     colwidhtArray[i] = 0
-    // }
-    // console.log(colwidhtArray)
-    // $('.ct img').on('load',function() {
-    //     var minValue = colHeightArray[0]
-    //     var minIndex = 0
-    //     for(var i=0;i<img.length;i++) {
-    //             if(colwidhtArray[i]<minValue) {
-    //                 minValue = colwidhtArray[i]
-    //                 minIndex = i
-    //             }
-    //         }
-    //     $(this).css({
-    //         left: minIndex * imgWidth,
-    //         top: minValue
-    //     })
-    //     colwidhtArray[minIndex]+=$(this).outerWidth(true) 
-    // })
-    </script>
+  </div>
+  <div class="load">我出现就加载</div>
+
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script>
+    var barrels = {
+      //初始化
+      imgNum: 0,
+      standardHeight: 0,
+      rowList: [],
+      barrelsWidth: 0,
+              // 传递三个参数   ·$('.barrels'), 20, 200·
+      init: function($barrels, imgNum, standardHeight) {
+        console.log('init',imgNum)
+        
+        this.$barrels = $barrels;
+        this.imgNum = imgNum;  //20  
+        this.standardHeight = standardHeight;  //200 
+        this.barrelsWidth = this.$barrels.width();// 父容器的快读
+        this.loadImg();  // 加载
+      },
+
+      render: function(imgInfo) {
+        console.log(imgInfo)
+        let that = this,
+            barrelsWidth = this.barrelsWidth,
+            // rowList = this.rowList,
+            rowWidth = 0,
+            newImgHeight = 0,
+            lastImgInfo = imgInfo;
+
+        that.rowList.push(lastImgInfo); // 当这行图片没有超过容器宽度时，则一直放到这一行。
+        $.each(that.rowList, function(index, imgInfo) {
+          rowWidth += imgInfo.width;
+          if(rowWidth > barrelsWidth) {
+            that.rowList.pop();
+            rowWidth -= imgInfo.width;
+            // 重新计算缩放比例
+            newImgHeight = that.standardHeight * barrelsWidth / rowWidth;
+            that.appendHtml(newImgHeight);
+            that.rowList = [];
+            that.rowList.push(lastImgInfo);
+          }
+        })
+      },
+
+      appendHtml: function(newHeight) {
+        let $newRow = $('<div class="img-row"></div>'); // 创建新元素
+        $.each(this.rowList, function(index, imgInfo) {
+          let $newImgCt = $('<div class="img-ct"></div>'),
+              $newImg = imgInfo.targetImg;
+          $newImg.height(newHeight);
+          $newImgCt.append($newImg);
+          $newRow.append($newImgCt);
+        })
+        this.$barrels.append($newRow);
+      },
+      // 加载图片   ，已经获取到图片url
+      loadImg: function() {
+        let that = this;
+        let imgURLs = this.getURL(this.imgNum);
+        // 遍历图片url
+        $.each(imgURLs, function(index, url) {
+          console.log(index,url)
+          let img = new Image();
+          img.src = url;
+          img.onload = function() {
+            let originWidth = img.width,
+                originHeight = img.height,
+                ratio = originWidth/originHeight;  // 宽度根据比例进行缩放
+            let imgInfo = {
+              targetImg: $(img),
+              width: that.standardHeight*ratio,
+              height: that.standardHeight
+            }
+            that.render(imgInfo);
+          };
+
+        })
+      },
+      // 设置图片地址
+      getURL: function(imgNum) {
+        console.log(imgNum)
+        //声明3个变量
+        let width, height, color;
+        //设置空数组
+        let urls = [];
+        // 设置图片宽高，并将其push到空数组中去
+        for(let i = 0; i < imgNum;i++) {
+          width = Math.floor(Math.random() * 100 + 200);
+          height = Math.floor(Math.random() * 100 + 200);
+          color = Math.random().toString(16).substring(2,8);
+          // urls.push("http://placehold.it/" + width + "x" + height + "/" + color + "/fff");
+          urls.push("https://unsplash.it/" + width + "/" + height + "/?random");
+          //console.log(urls)
+        }
+        return urls;
+       
+      },
+
+      // 判断.load是否出现
+      isVisible: function($node) {
+        var windowHeight = $(window).height(),
+              scrollTop = $(window).scrollTop(),
+              offsetTop = $node.offset().top,
+              nodeHeight = $node.outerHeight(true);
+        if (windowHeight + scrollTop > offsetTop && scrollTop < offsetTop + nodeHeight) {
+            return true;
+        }else{
+            return false;
+        }
+      }
+    }
+
+    // 一开始的时候让图片铺满屏幕
+    barrels.init($('.barrels'), 20, 200);
+
+    var clock;
+    $(window).on('scroll',function () {
+      if (clock) {
+        clearTimeout(clock);
+      }
+      clock = setTimeout(function () {
+        if(barrels.isVisible($('.load'))) {
+          barrels.init($('.barrels'), 30, 200);
+        }
+      },200);
+    });
+  </script>
 </body>
 </html>
+
